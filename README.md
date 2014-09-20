@@ -13,3 +13,5 @@ The presentation uses [reveal.js](https://github.com/hakimel/reveal.js)
 "asher's alice story" creative commons licensed (BY-NC-ND) flickr photo by giveawayboy: http://flickr.com/photos/giveawayboy/2346500801
 
 "Janitor Cat" creative commons licensed (BY-ND) flickr photo by Nina J. G.: http://flickr.com/photos/nicasaurusrex/4638594977 
+
+"It's alright" creative commons licensed (BY-NC) flickr photo by play4smee: http://flickr.com/photos/play4smee/3124005477 
