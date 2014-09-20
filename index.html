@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Cleaner Data</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Geoff Hing">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+		<link rel="stylesheet" href="css/cleaner-data.css">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section data-background="img/11899178333_3a4781efb9_h.jpg" data-state="title">
+                    <h1>Cleaner Data</h1>
+                    <p>Geoffrey Hing (<a href="https://twitter.com/geoffhing">@geoffhing</a>)</p>
+                    <p><a href="http://ghing.github.io/cleaner-data/">http://ghing.github.io/cleaner-data/</a></p>
+				</section>
+
+				<section data-markdown data-background="img/2193813825_0cfbe64ef6_o.jpg">
+					<script type="text/template">
+                        ## We're in this together
+                    </script>
+
+                    <aside class="notes" data-markdown>
+                        I don't have all the answers
+
+                        But I run into this alot
+
+                        My goal is to try to facilitate a discussion about common problems, tools and techniques
+
+                        Most of my recent experience is working with a dataset of convictions in Cook County and with elections data from a number of states.
+					</aside>
+				</section>
+
+                <!-- Examples -->
+				<section>
+                    <h2>My kind of town</h2>
+
+                    <table>
+                        <thead>
+                            <tr><th>city_state</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>CCHICAGO, IL </td></tr>
+                            <tr><td>CDHICAGO </td></tr>
+                            <tr><td>CHHICAGO    IL</td></tr>
+                            <tr><td>CHICAGO     CH</td></tr>
+                            <tr><td>CHICAHO IL</td></tr>
+                            <tr><td>CHCAGO IL</td></tr>
+                            <tr><td>CHCAGO      IL</td></tr>
+                            <tr><td>CHCAGO IL</td></tr>
+                            <tr><td>CHCAIGO     IL</td></tr>
+                            <tr><td>CHCIACO     IL</td></tr>
+                            <tr><td>CHCIAGO</td></tr>
+                            <tr><td>...</td></tr>
+                        </table>
+                    </table>
+				</section>
+
+				<section data-markdown> xc
+					<script type="text/template">
+					## Broken fields
+					
+					"RIFLE <16''/SHOTGUN <18"",F"""
+
+					</script>
+
+					<aside class="notes" data-markdown>
+                        At some time in the data processing before this got to us, the CSV got messed up and these two fields were merged together.
+					</aside>
+				</section>
+
+				<section>
+                    <h2>Multiple values in one column</h2>
+
+                    <table>
+                        <thead>
+                            <tr><th>statute</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>720-5\8-4(19-1)</td></tr>
+                            <tr><td>720-5\8-4(18-5)</td></tr>
+                        <tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <h2>Different references over time</h2>
+
+                    <table>
+                        <thead>
+                            <tr><th>statute</th><th>chrgdesc</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>38-9-1-A(1)</td><td>MURDER</td></tr>
+                            <tr><td>38-9-1-A(1)</td><td>MURDER</td></tr>
+                            <tr><td>38-9-1-A(2)</td><td>MURDER</td></tr>
+                            <tr><td>720-5/9-1(a)(1)</td><td>MURDER/INTENT TO KILL/INJURE</td></tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <h2>Encoded values</h2>
+
+                    <table>
+                        <thead>
+                            <tr><th>minsent</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>5</td></tr>
+                            <tr><td>90</td></tr>
+                            <tr><td>24000</td></tr>
+                            <tr><td>24000</td></tr>
+                            <tr><td>24000</td></tr>
+                            <tr><td>10</td></tr>
+                            <tr><td>300000</td></tr>
+                            <tr><td>14</td></tr>
+                        </tbody>
+
+                        <aside class="notes" data-markdown>
+                        The columns for minimum and maximum sentences were encoded as 8 digit values.  The leftmost 3 digits were years, the middle two were months, and the rightmost were days.  There were special values for life and death sentences.  The values weren't zero-padded.
+                        </aside>
+                    </table>
+                </section>
+
+				<section data-background="img/2346500801_609b4fec4e_o.jpg">
+				    <aside class="notes" data-markdown>
+                    Does anyone else have any stories about dirty data that they'd like to share?
+
+                    In other projects I've run into issues with:
+                    
+                    * Unexpected character encodings
+                    * Non-structured data (PDFs converted to text)
+                    * Duplicate rows
+					</aside>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    ## Start with cleaner data
+
+                    * What questions are you asking of your data?
+                    * Make a data dictionary
+                    * Test data entry
+                    * Query, visualize or publish a sample
+					</script>
+				</section>
+
+                <section data-markdown>
+					<script type="text/template">
+                    ##My data cleaning toolkit
+
+                    * [csvkit](https://csvkit.readthedocs.org/)
+                    * custom scripts in Python
+                    * [OpenRefine](http://openrefine.org/)
+					</script>
+
+                    <aside class="notes" data-markdown>
+                        I prefer coding or command-line tools because that's what's familiar and fast to me.  You can probably do a lot of these things using a spreadsheet application.
+
+                        I prefer scripted or command line solutions becase:
+
+                        * It's easier to replay your work, make your changes explicit, share work with others
+                        * I've had problems with spreadsheet applications on larger datasets (~80)
+					</aside>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+                        ## Know what to expect
+
+                        * Data dictionary
+                        * How was the dataset created?
+                        * Other data about the same subject
+                    </script>
+
+					<aside class="notes" data-markdown>
+                        With OpenElections we were able to find errors in published results data by comparing values between different reporting levels.
+                    </aside>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    ## Visual inspection
+
+                    * Empty columns
+                    * Values that stand out from others in the column
+                    * Try sorting
+					</script>
+
+					<aside class="notes" data-markdown>
+                        Open your data in a spreadsheet and visually inspect it.
+
+                        Sorting alphabetically can help you find unexpected values.
+					</aside>
+				</section>
+
+                <section>
+                  <h2>Quick data stats</h2>
+
+                  <pre><code class="sh" data-trim>
+csvstat -c statute data/Criminal_Convictions_ALLCOOK_05-09.csv 
+14. statute
+&lt;type 'unicode'&gt;
+Nulls: True
+Unique values: 1616
+5 most frequent values:
+720-570/402(c):29290
+720-5/19-1(a):14697
+720-5/16A-3(a):13613
+720-570/401(c)(2):13415
+720-570/401(d)(i):10959Max length: 27
+
+Row count: 321590
+                   </code></pre>
+                   
+
+                   or facet/cluster in Refine.
+                </section>
+
+                <section data-background="img/refine_facet.png">
+                </section>
+
+                <section data-background="img/refine_cluster.png">
+                </section>
+
+				<section data-markdown data-background="img/4638594977_f69873181b_o.jpg">
+					<script type="text/template">
+                    ## Do you have to clean?
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    ## What fields change together?
+
+                    For example:
+
+                    * statute, charge description, charge class
+                    * street address, city, state, zip code
+					</script>
+
+                    <aside class="notes" data-markdown>
+                        If data in one column is dirty, you might be able to determine the correct value from the others.
+
+                        Avoid unneccesary cleaning. For example: the geocoder I used worked well with just street address and zip code.  The zip code field was pretty clean even though city and states were missing or mangled. 
+                    </aside>
+				</section>
+
+                <section>
+                  <h2>Data pipelines</h2>
+
+                  <img src="img/DataProcessingDiagram.png">
+
+                  <aside class="notes" data-markdown>
+                      As you load or inspect your data, you may notice dirty values.  While you could fix some values at different points in the process, it's best to do one thing at a time with your data. 
+                  </aside>
+                </section>
+
+                <section data-markdown>
+					<script type="text/template">
+                        ## Isolate and Transform
+
+                        * Don't edit your original values 
+                        * One transform at a time
+                        * Document your changes and assumptions
+                    </script>
+
+                    <aside class="notes" data-markdown>
+                        You should document your changes and assumptions. At the very least, use a paper notepad or text file.  At best, write scripts.  For in-between, I've found IPython Notebooks to be a useful tool.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Example from OpenElections</h2>
+
+                    <a href="https://github.com/openelections/core/blob/dev/openelex/us/md/transform/__init__.py">openelex.us.md.transform</a>
+<pre><code class="python" data-trim>
+class RemoveBaltimoreCityComptroller(BaseTransform):
+    """
+    Remove Baltimore City comptroller results.
+
+    Maryland election results use the string "Comptroller" for both the 
+    state comptroller and the Baltimore City Comptroller.  We're only
+    interested in the state comptroller.
+
+    """
+    name = 'remove_baltimore_city_comptroller'
+
+    def __call__(self):
+        election_id = 'md-2004-11-02-general'
+        office = Office.objects.get(state='MD', name='Comptroller')
+        Contest.objects.filter(election_id=election_id, office=office).delete()
+        Candidate.objects.filter(election_id=election_id,
+            contest_slug='comptroller').delete()
+        Result.objects.filter(election_id=election_id,
+            contest_slug='comptroller').delete()
+</code></pre>
+
+                </section>
+
+                <section data-markdown>
+					<script type="text/template">
+                        ## Example from cook-convictions-data
+
+                        Separate tables for:
+
+                        * Raw dispositions
+                        * Cleaned/transformed dispositions
+                        * Rolled up convictions
+                    </script>
+                </section>
+
+                <section data-markdown>
+					<script type="text/template">
+                        ## Example from cook-convictions-data
+
+                        Separate script for each data loading/transforming task ([convictions_data.managenent.commands](https://github.com/sc3/cook-convictions-data/tree/master/convictions_data/management/commands))
+
+                        * aggregate_census_fields
+                        * boundarize
+                        * chicago_geojson_from_shp
+                        * create_convictions
+                        * create_dispositions
+                        * detect_cook
+                        * export_bad_addresses
+                        * export_chicago_border_geojson
+                        * export_model_geojson
+                        * flag_chicago_msa_places
+                        * geocode_dispositions
+                        * load_aff_data
+                        * load_dispositions_csv
+                        * load_spatial_data
+                        * reload_dispositions
+                        * set_conviction_place
+                        * statute2iucr
+                    
+                    </script>
+                </section>
+
+                <section>
+                    <h2>Example from cook-convictions-data</h2>
+
+                    <a href="https://github.com/sc3/cook-convictions-data/blob/master/convictions_data/models.py">convictions_data.models</a>
+
+<pre><code class="python">
+def _load_field_minsent(self, val):
+    self.minsent_years, self.minsent_months, self.minsent_days, self.minsent_life, self.minsent_death = self._parse_sentence(val)
+    return self
+</code></pre>
+                </section>
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
